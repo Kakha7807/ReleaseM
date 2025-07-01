@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agile Release Process Flow Diagram - Editable</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .editable {
+            cursor: pointer;
+            transition: background-color 0.2s;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .editable:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            outline: 1px dashed #3498db;
+        }
+
+        .editing {
+            background-color: #fff3cd;
+            outline: 2px solid #ffc107;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .phase {
+            width: 100%;
+            max-width: 1200px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .phase-header {
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .activity-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .activity-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .team-label {
+            font-weight: bold;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .team-dev { background: #3498db; }
+        .team-qa { background: #e74c3c; }
+        .team-dba { background: #34495e; }
+        .team-itops { background: #27ae60; }
+        .team-po { background: #8e44ad; }
+
+        .activity-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .activity-details {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .handoff-arrow {
+            text-align: center;
+            font-size: 36px;
+            color: #3498db;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .handoff-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            white-space: nowrap;
+        }
+
+        .decision-point {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .decision-point h4 {
+            margin: 0 0 10px 0;
+            color: #856404;
+        }
+
+        .release-constraints {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .release-constraints h3 {
+            color: #c62828;
+            margin-top: 0;
+        }
+
+        .constraints-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .constraint-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .constraint-box h4 {
+            margin: 0 0 10px 0;
+            color: #d32f2f;
+        }
+
+        .timeline-bar {
+            background: #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .timeline-items {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-dot {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #bdc3c7;
+            z-index: 0;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .edit-controls button {
+            margin: 5px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .save-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #229954;
+        }
+
+        .reset-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+
+        .download-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .constraints-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-items {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .timeline-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="editable">Agile Release Process Flow</h1>
+        <p class="subtitle editable">Sprint to Production - Flow Diagram with Team Handoffs</p>
+
+        <div class="timeline-bar">
+            <h3 style="text-align: center; margin-top: 0;" class="editable">Process Timeline</h3>
+            <div class="timeline-items">
+                <div class="timeline-line"></div>
+                <div class="timeline-item">
+                    <div class="timeline-dot editable">1-2</div>
+                    <div><strong class="editable">Weeks 1-2</strong><br><span class="editable">Sprint Development</span></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot editable">3</div>
+                    <div><strong class="editable">Sprint End</strong><br><span class="editable">Review & Build</span></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot editable">4</div>
+                    <div><strong class="editable">1-2 Days</strong><br><span class="editable">Pre-Prod Validation</span></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot editable">5</div>
+                    <div><strong class="editable">Tues/Thurs</strong><br><span class="editable">Production Release</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <!-- Phase 1: Sprint Development -->
+            <div class="phase">
+                <div class="phase-header editable">Phase 1: Sprint Development (Weeks 1-2)</div>
+                <div class="activities-grid">
+                    <div class="activity-box">
+                        <span class="team-label team-dev editable">DEV TEAM</span>
+                        <div class="activity-title editable">Sprint Development</div>
+                        <div class="activity-details editable">
+                            • Develop user stories<br>
+                            • Code reviews<br>
+                            • Unit testing<br>
+                            • Continuous integration
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-qa editable">QA TEAM</span>
+                        <div class="activity-title editable">Continuous Testing</div>
+                        <div class="activity-details editable">
+                            • Test in TEST environment<br>
+                            • Create test cases<br>
+                            • Report defects<br>
+                            • Regression testing
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-po editable">PRODUCT OWNER</span>
+                        <div class="activity-title editable">Sprint Oversight</div>
+                        <div class="activity-details editable">
+                            • Clarify requirements<br>
+                            • Prioritize backlog<br>
+                            • Stakeholder communication<br>
+                            • Accept stories
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="handoff-arrow">
+                ⬇
+                <span class="handoff-label editable">HANDOFF: Sprint Review</span>
+            </div>
+
+            <!-- Phase 2: Sprint End -->
+            <div class="phase">
+                <div class="phase-header editable">Phase 2: Sprint Review & Build Creation</div>
+                <div class="activities-grid">
+                    <div class="activity-box">
+                        <span class="team-label team-dev editable">DEV TEAM</span>
+                        <div class="activity-title editable">Build Package Creation</div>
+                        <div class="activity-details editable">
+                            • Create release build<br>
+                            • Version tagging<br>
+                            • Package artifacts<br>
+                            • Update release notes
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-qa editable">QA TEAM</span>
+                        <div class="activity-title editable">Sprint Test Report</div>
+                        <div class="activity-details editable">
+                            • Compile test results<br>
+                            • Document known issues<br>
+                            • Test coverage report<br>
+                            • Sign-off for pre-prod
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-po editable">PRODUCT OWNER</span>
+                        <div class="activity-title editable">Sprint Acceptance</div>
+                        <div class="activity-details editable">
+                            • Review sprint demo<br>
+                            • Accept deliverables<br>
+                            • Business validation<br>
+                            • Approve for pre-prod
+                        </div>
+                    </div>
+                </div>
+
+                <div class="decision-point">
+                    <h4 class="editable">🔐 Quality Gate 1: Sprint Acceptance</h4>
+                    <p class="editable">Product Owner approval required to proceed to Pre-Production</p>
+                </div>
+            </div>
+
+            <div class="handoff-arrow">
+                ⬇
+                <span class="handoff-label editable">HANDOFF: To Pre-Production</span>
+            </div>
+
+            <!-- Phase 3: Pre-Production -->
+            <div class="phase">
+                <div class="phase-header editable">Phase 3: Pre-Production Deployment & Validation</div>
+                <div class="activities-grid">
+                    <div class="activity-box">
+                        <span class="team-label team-dev editable">DEV TEAM</span>
+                        <div class="activity-title editable">Deploy to Pre-Prod</div>
+                        <div class="activity-details editable">
+                            • Execute CI/CD pipeline<br>
+                            • Deploy build package<br>
+                            • Verify deployment<br>
+                            • Support troubleshooting
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-qa editable">QA TEAM</span>
+                        <div class="activity-title editable">Pre-Prod Testing</div>
+                        <div class="activity-details editable">
+                            • Smoke testing<br>
+                            • Integration testing<br>
+                            • Performance validation<br>
+                            • Security checks
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-dba editable">DBA TEAM</span>
+                        <div class="activity-title editable">Database Validation</div>
+                        <div class="activity-details editable">
+                            • Review DB scripts<br>
+                            • Test data migration<br>
+                            • Performance analysis<br>
+                            • Backup procedures
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-itops editable">IT OPS</span>
+                        <div class="activity-title editable">Environment Setup</div>
+                        <div class="activity-details editable">
+                            • Configure pre-prod<br>
+                            • Monitor resources<br>
+                            • Security compliance<br>
+                            • Infrastructure ready
+                        </div>
+                    </div>
+                </div>
+
+                <div class="decision-point">
+                    <h4 class="editable">🔐 Quality Gate 2: Pre-Production Validation</h4>
+                    <p class="editable">QA Team sign-off + DBA approval required</p>
+                </div>
+            </div>
+
+            <div class="handoff-arrow">
+                ⬇
+                <span class="handoff-label editable">HANDOFF: RFC Creation</span>
+            </div>
+
+            <!-- Phase 4: Release Preparation -->
+            <div class="phase">
+                <div class="phase-header editable">Phase 4: Production Release Preparation</div>
+                <div class="activities-grid">
+                    <div class="activity-box">
+                        <span class="team-label team-po editable">PRODUCT OWNER</span>
+                        <div class="activity-title editable">RFC Creation</div>
+                        <div class="activity-details editable">
+                            • Create change request<br>
+                            • Business justification<br>
+                            • Risk assessment<br>
+                            • Rollback plan
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-dev editable">DEV TEAM</span>
+                        <div class="activity-title editable">Release Documentation</div>
+                        <div class="activity-details editable">
+                            • Technical documentation<br>
+                            • Deployment guide<br>
+                            • Support handover<br>
+                            • Known issues list
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-itops editable">IT OPS</span>
+                        <div class="activity-title editable">CAB Review</div>
+                        <div class="activity-details editable">
+                            • Review RFC<br>
+                            • Assess impact<br>
+                            • Schedule deployment<br>
+                            • Resource allocation
+                        </div>
+                    </div>
+                </div>
+
+                <div class="decision-point">
+                    <h4 class="editable">🔐 Quality Gate 3: Change Approval</h4>
+                    <p class="editable">CAB approval required (48 hours before release)</p>
+                </div>
+            </div>
+
+            <div class="handoff-arrow">
+                ⬇
+                <span class="handoff-label editable">HANDOFF: To Production</span>
+            </div>
+
+            <!-- Phase 5: Production Deployment -->
+            <div class="phase">
+                <div class="phase-header editable">Phase 5: Production Deployment</div>
+                <div class="activities-grid">
+                    <div class="activity-box">
+                        <span class="team-label team-itops editable">IT OPS</span>
+                        <div class="activity-title editable">Execute Deployment</div>
+                        <div class="activity-details editable">
+                            • Execute change plan<br>
+                            • Deploy to production<br>
+                            • Monitor deployment<br>
+                            • Update CMDB
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-dba editable">DBA TEAM</span>
+                        <div class="activity-title editable">Database Changes</div>
+                        <div class="activity-details editable">
+                            • Execute DB scripts<br>
+                            • Monitor performance<br>
+                            • Verify data integrity<br>
+                            • Update DB docs
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-qa editable">QA TEAM</span>
+                        <div class="activity-title editable">Post-Deploy Validation</div>
+                        <div class="activity-details editable">
+                            • Smoke tests in prod<br>
+                            • Verify functionality<br>
+                            • Monitor for issues<br>
+                            • Final sign-off
+                        </div>
+                    </div>
+                    <div class="activity-box">
+                        <span class="team-label team-po editable">PRODUCT OWNER</span>
+                        <div class="activity-title editable">Business Verification</div>
+                        <div class="activity-details editable">
+                            • Verify features<br>
+                            • User communication<br>
+                            • Success metrics<br>
+                            • Close RFC
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="release-constraints">
+            <h3 class="editable">🚨 Production Release Schedule & Constraints</h3>
+            <div class="constraints-grid">
+                <div class="constraint-box">
+                    <h4 class="editable">📅 Allowed Release Days</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;" class="editable">
+                        <li><strong>Tuesday</strong> - Production releases</li>
+                        <li><strong>Thursday</strong> - Production releases</li>
+                        <li>No releases on Mon, Wed, Fri</li>
+                        <li>No weekend releases</li>
+                    </ul>
+                </div>
+                <div class="constraint-box">
+                    <h4 class="editable">🚫 Release Freeze Periods</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;" class="editable">
+                        <li><strong>Month-End:</strong> Last 3 business days</li>
+                        <li><strong>Year-End:</strong> Dec 15 - Jan 10</li>
+                        <li>Emergency fixes need executive approval</li>
+                        <li>Plan sprints around freeze periods</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px; text-align: center;" class="editable">
+                <strong>⏰ Important Timeline:</strong> RFC must be submitted 48 hours before release day. 
+                Pre-prod validation should complete by Monday (for Tuesday) or Wednesday (for Thursday).
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span class="team-label team-dev editable">DEV TEAM</span>
+                <span class="editable">Development & Build</span>
+            </div>
+            <div class="legend-item">
+                <span class="team-label team-qa editable">QA TEAM</span>
+                <span class="editable">Testing & Validation</span>
+            </div>
+            <div class="legend-item">
+                <span class="team-label team-dba editable">DBA TEAM</span>
+                <span class="editable">Database Management</span>
+            </div>
+            <div class="legend-item">
+                <span class="team-label team-itops editable">IT OPS</span>
+                <span class="editable">Infrastructure & Deployment</span>
+            </div>
+            <div class="legend-item">
+                <span class="team-label team-po editable">PRODUCT OWNER</span>
+                <span class="editable">Business & RFC</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="edit-controls">
+        <h4>Edit Controls</h4>
+        <button class="save-btn" onclick="saveChanges()">💾 Save to Browser</button>
+        <button class="download-btn" onclick="downloadHTML()">📥 Download HTML</button>
+        <button class="reset-btn" onclick="resetContent()">🔄 Reset All</button>
+        <p style="font-size: 12px; color: #666; margin-top: 10px;">Click any text to edit</p>
+    </div>
+
+    <script>
+        // Make elements editable
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved content if exists
+            loadSavedContent();
+            
+            // Add click listeners to all editable elements
+            const editables = document.querySelectorAll('.editable');
+            editables.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    makeEditable(this);
+                });
+            });
+
+            // Click outside to save
+            document.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('editable') && !e.target.classList.contains('editing')) {
+                    const editing = document.querySelector('.editing');
+                    if (editing) {
+                        saveElement(editing);
+                    }
+                }
+            });
+        });
+
+        function makeEditable(element) {
+            // If already editing another element, save it first
+            const currentlyEditing = document.querySelector('.editing');
+            if (currentlyEditing && currentlyEditing !== element) {
+                saveElement(currentlyEditing);
+            }
+
+            element.classList.add('editing');
+            element.contentEditable = true;
+            element.focus();
+            
+            // Select all text
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        function saveElement(element) {
+            element.contentEditable = false;
+            element.classList.remove('editing');
+        }
+
+        function saveChanges() {
+            const content = document.querySelector('.container').innerHTML;
+            localStorage.setItem('releaseProcessContent', content);
+            alert('Changes saved to browser storage!');
+        }
+
+        function loadSavedContent() {
+            const saved = localStorage.getItem('releaseProcessContent');
+            if (saved) {
+                document.querySelector('.container').innerHTML = saved;
+                // Re-attach event listeners
+                const editables = document.querySelectorAll('.editable');
+                editables.forEach(element => {
+                    element.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        makeEditable(this);
+                    });
+                });
+            }
+        }
+
+        function resetContent() {
+            if (confirm('This will reset all changes. Are you sure?')) {
+                localStorage.removeItem('releaseProcessContent');
+                location.reload();
+            }
+        }
+
+        function downloadHTML() {
+            const fullHTML = document.documentElement.outerHTML;
+            const blob = new Blob([fullHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'release-process-editable.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Handle Enter key to save
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.classList.contains('editing')) {
+                e.preventDefault();
+                saveElement(e.target);
+            }
+        });
+    </script>
+</body>
+</html>
